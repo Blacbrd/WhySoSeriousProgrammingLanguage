@@ -7,19 +7,27 @@
                 "kind": "BinaryExpression",
                 "left": {
                     "kind": "NumericLiteral",
-                    "value": "10"
+                    "value": "1"
                 },
                 "right": {
-                    "kind": "NumericLiteral",
-                    "value": "3"
+                    "kind": "BinaryExpression",
+                    "left": {
+                        "kind": "NumericLiteral",
+                        "value": "2"
+                    },
+                    "right": {
+                        "kind": "NumericLiteral",
+                        "value": "3"
+                    },
+                    "operator": "+"
                 },
                 "operator": "+"
             },
             "right": {
                 "kind": "NumericLiteral",
-                "value": "3"
+                "value": "4"
             },
-            "operator": "+"
+            "operator": "-"
         }
     ]
 }

@@ -14,6 +14,7 @@
     # AssignmentExpression
 
 # Whatever has the most priority is passed in last as that gives it more presidence within the AST
+# The more presidence something has, the lower down the tree it is
 
 from frontend.abstractSyntaxTree import Statement, Program, Expression, BinaryExpression, NumericLiteral, Identifier
 from frontend.lexer import tokenise, Token, TokenType
@@ -31,6 +32,18 @@ class Parser:
         # Return true if not end of line
         print(f"Current: {self.tokens[0].tokenType}")
         return self.tokens[0].tokenType != TokenType.EOF
+    
+    # Same thing as advance, but throws an error if the token passed isn't present
+    def expectAdvance(self, tokenType, errorMessage):
+        previous = self.currentToken()
+
+        if (not previous) and (previous.type != tokenType):
+            print(f"Parse Error: Expected type {tokenType}, instead got {previous.type} for the value of '{previous}'")
+            print(errorMessage)
+            sys.exit([2])
+        
+        del self.tokens[0]
+        return previous
 
     def parseStatement(self):
         # Function decleration
@@ -45,11 +58,37 @@ class Parser:
     # 10 + 5 - 5
     # Left hand presidence, therefore we evaluate left first
     def parseAdditiveExpression(self):
+        left = self.parseMultiplicativeExpression()
+
+        # While there are still operators
+        while self.currentToken().value in "+-":
+
+            # Gets the operator we're dealing with
+            operator = self.advance().value
+
+            # Now we check the right hand side
+            right = self.parseMultiplicativeExpression()
+
+            # Since left can have multiple expressions, such as
+            # (((10 + 4) - 2) + 2)
+            # We need to account for this using recursion
+            # So first value will be 10
+            # Then it will become 10 + 4
+            # Then it will become 10 + 4 - 2 etc.
+            left = BinaryExpression(left, right, operator)
+        
+        try:
+            return left.getJSON()
+        
+        except:
+            return left
+    
+    # Since it's called after addition, it will take more presidence since its lower in the tree
+    def parseMultiplicativeExpression(self):
         left = self.parsePrimaryExpression()
 
         # While there are still operators
-        while self.currentToken().value == "+" or self.currentToken().value == "-":
-
+        while self.currentToken().value in "*/%":
             # Gets the operator we're dealing with
             operator = self.advance().value
 
@@ -64,7 +103,8 @@ class Parser:
             # Then it will become 10 + 4 - 2 etc.
             left = BinaryExpression(left, right, operator)
         
-        return left.getJSON()
+        # Need to return the object back to the additive function 
+        return left
     
     # Returns current function
     def currentToken(self):
@@ -92,6 +132,23 @@ class Parser:
             case TokenType.NUMBER:
                 number = NumericLiteral(self.advance().value)
                 return number.getJson()
+            
+            case TokenType.OPENPARENTHASIS:
+
+                # We want to remove the opening parenthesis
+                self.advance()
+                
+                # This will be the value inside the parenthasis
+                value = self.parseExpression()
+
+                print(f"value is {value}")
+
+                # Remove and check for closing parenthasis
+                # When the additive and multiplicative expressions come accross something that isnt a number or binary operator, they will return to this function
+                # If that current character isn't a closing parenthasis, then an error will be thrown
+                self.expectAdvance(TokenType.CLOSEPARENTHASIS.value, "You forgot a close perenthasis")
+
+                return value
             
             case _:
 

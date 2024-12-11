@@ -63,7 +63,7 @@ def tokenise(sourceCode: str):
             tokens.append(Token(char, TokenType.CLOSEPARENTHASIS))
             pos += 1
 
-        elif char in "+-*/":
+        elif char in "+-*/%":
             tokens.append(Token(char, TokenType.BINARYOPERATION))
             pos += 1
 
@@ -81,9 +81,10 @@ def tokenise(sourceCode: str):
                 pos += 1
 
             # .get() returns either the token type if the identifier exists in the dictionary, or TokenType.IDENTIFIER as default
-            # .join merges all of the array components together
+            # .join merges all of the array components together, so if we have ["l", "e", "t"], we get "let"
             tokenType = keyWordDict.get("".join(identifier), TokenType.IDENTIFIER)
 
+            # Appends token object
             tokens.append(Token("".join(identifier), tokenType))
 
         elif char.isnumeric():

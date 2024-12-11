@@ -17,9 +17,7 @@ def repl():
         # Need .getJSON otherwise we just print out the program class location rather than what it contains
         program = parser.produceAST(prompt)
         
-        formattedProgram = json.dumps(program.getJSON(), indent=4)
-
-        print(formattedProgram)
+        print(program.getJSON())
 
         with open("ast.json", "w") as file:
             json.dump(program.getJSON(), file, indent=4)
