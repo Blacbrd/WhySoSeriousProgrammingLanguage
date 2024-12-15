@@ -23,6 +23,7 @@ class TokenType(Enum):
     # Shows where the end of the file is
     ENDLINE = "endLine"
 
+    NULL = "null"
     EOF = "EndOfFile"
 
 
@@ -38,7 +39,8 @@ class Token:
 
 # I will change the
 keyWordDict = {
-    "let": TokenType.LET
+    "let": TokenType.LET,
+    "null": TokenType.NULL
 }
 
 # Ignores all white space, including spaces, new lines and tabs

@@ -14,6 +14,7 @@ class NodeType(Enum):
 
     PROGRAM = "Program"
     NUMERICLITERAL = "NumericLiteral"
+    NULLLITERAL = "NullLiteral"
     IDENTIFIER = "Identifier"
     BINARYEXPRESSION = "BinaryExpression"
 
@@ -33,10 +34,11 @@ class Program(Statement):
         self.body = body
     
     def getJSON(self):
+
+        # This gets the JSON for each statement in the body
         return {
             "kind": self.kind.value,
-            "body": self.body
-
+            "body": [statement.getJSON() for statement in self.body]
         }
 
 # Expect to return a value
@@ -45,26 +47,19 @@ class Expression(Statement):
     pass
 
 # 4 + 5
-class BinaryExpression(Expression):
-
-    kind: NodeType
-    left: Expression
-    right: Expression
-    operator: str
-
+class BinaryExpression:
     def __init__(self, left, right, operator):
-        self.kind = NodeType.BINARYEXPRESSION.value
         self.left = left
         self.right = right
         self.operator = operator
-    
-    def getJSON(self):
+        self.kind = NodeType.BINARYEXPRESSION
 
+    def getJSON(self):
         return {
-            "kind": self.kind,
+            "kind": self.kind.value if hasattr(self.kind, "value") else self.kind,
+            "operator": self.operator,
             "left": self.left.getJSON() if hasattr(self.left, "getJSON") else self.left,
             "right": self.right.getJSON() if hasattr(self.right, "getJSON") else self.right,
-            "operator": self.operator
         }
 
 class Identifier(Expression):
@@ -85,16 +80,29 @@ class Identifier(Expression):
         }
 
 class NumericLiteral(Expression):
-
-    kind: NodeType
-    value: int
+    value: float
 
     def __init__(self, value):
+        self.value = float(value)  # Ensure it's converted to a float
         self.kind = NodeType.NUMERICLITERAL.value
-        self.value = value
-    
-    def getJson(self):
+
+    def getJSON(self):
+        return {
+            "kind": self.kind.value if hasattr(self.kind, "value") else self.kind,
+            "value": self.value
+        }
+
+class NullLiteral(Expression):
+
+    kind: NodeType
+    value: str
+
+    def __init__(self):
+        self.kind = NodeType.NULLLITERAL.value
+        self.value = "null"
+
+    def getJSON(self):
         return {
             "kind": self.kind,
             "value": self.value
-        }
+        }  

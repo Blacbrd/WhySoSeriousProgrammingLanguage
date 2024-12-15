@@ -3,31 +3,23 @@
     "body": [
         {
             "kind": "BinaryExpression",
+            "operator": "*",
             "left": {
                 "kind": "BinaryExpression",
+                "operator": "/",
                 "left": {
                     "kind": "NumericLiteral",
-                    "value": "1"
+                    "value": 10.0
                 },
                 "right": {
-                    "kind": "BinaryExpression",
-                    "left": {
-                        "kind": "NumericLiteral",
-                        "value": "2"
-                    },
-                    "right": {
-                        "kind": "NumericLiteral",
-                        "value": "3"
-                    },
-                    "operator": "+"
-                },
-                "operator": "+"
+                    "kind": "NumericLiteral",
+                    "value": 2.0
+                }
             },
             "right": {
                 "kind": "NumericLiteral",
-                "value": "4"
-            },
-            "operator": "-"
+                "value": 3.0
+            }
         }
     ]
 }
