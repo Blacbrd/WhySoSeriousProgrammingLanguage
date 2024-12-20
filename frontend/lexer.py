@@ -9,6 +9,7 @@ from typing import List
 
 class TokenType(Enum):
     NUMBER = "number"
+    STRING = "string"
     IDENTIFIER = "identifier"
     EQUALS = "equals"
     OPENPARENTHASIS = "openParenthasis"
@@ -23,7 +24,6 @@ class TokenType(Enum):
     # Shows where the end of the file is
     ENDLINE = "endLine"
 
-    NULL = "null"
     EOF = "EndOfFile"
 
 
@@ -40,7 +40,6 @@ class Token:
 # I will change the
 keyWordDict = {
     "let": TokenType.LET,
-    "null": TokenType.NULL
 }
 
 # Ignores all white space, including spaces, new lines and tabs
@@ -66,6 +65,7 @@ def tokenise(sourceCode: str):
             pos += 1
 
         elif char in "+-*/%":
+
             tokens.append(Token(char, TokenType.BINARYOPERATION))
             pos += 1
 

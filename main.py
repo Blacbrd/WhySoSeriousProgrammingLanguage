@@ -1,9 +1,22 @@
 from frontend.parser import Parser
+import runtime.values
+from runtime.environment import Environment
 from runtime.interpreter import evaluate
 import json
 
 def repl():
     parser = Parser()
+    env = Environment(None)
+
+    env.declareVariable("x", runtime.values.NumberValue(100))
+
+    # Instead of having a null literal, we can declare these as variables before runtime
+    env.declareVariable("null", runtime.values.NullValue())
+    env.declareVariable("None", runtime.values.NullValue())
+
+    env.declareVariable("true", runtime.values.BooleanValue(True))
+    env.declareVariable("false", runtime.values.BooleanValue(False))
+
     print("Repl v0.1")
 
     while True:
@@ -24,7 +37,7 @@ def repl():
             json.dump(program.getJSON(), file, indent=4)
 
         # Evaluate the program
-        result = evaluate(program)
+        result = evaluate(program, env)
 
         # Display the evaluation result in JSON format
         if hasattr(result, "getJSON"):
@@ -39,3 +52,5 @@ def repl():
             print(result)
 
 repl()
+
+################## GOT TO 15:20 ###################################

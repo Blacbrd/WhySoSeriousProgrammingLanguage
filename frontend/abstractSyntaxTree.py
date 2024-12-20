@@ -14,7 +14,6 @@ class NodeType(Enum):
 
     PROGRAM = "Program"
     NUMERICLITERAL = "NumericLiteral"
-    NULLLITERAL = "NullLiteral"
     IDENTIFIER = "Identifier"
     BINARYEXPRESSION = "BinaryExpression"
 
@@ -91,18 +90,3 @@ class NumericLiteral(Expression):
             "kind": self.kind.value if hasattr(self.kind, "value") else self.kind,
             "value": self.value
         }
-
-class NullLiteral(Expression):
-
-    kind: NodeType
-    value: str
-
-    def __init__(self):
-        self.kind = NodeType.NULLLITERAL.value
-        self.value = "null"
-
-    def getJSON(self):
-        return {
-            "kind": self.kind,
-            "value": self.value
-        }  

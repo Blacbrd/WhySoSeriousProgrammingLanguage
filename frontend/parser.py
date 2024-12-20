@@ -16,7 +16,7 @@
 # Whatever has the most priority is passed in last as that gives it more presidence within the AST
 # The more presidence something has, the lower down the tree it is
 
-from frontend.abstractSyntaxTree import Statement, Program, Expression, BinaryExpression, NumericLiteral, Identifier, NullLiteral
+from frontend.abstractSyntaxTree import Statement, Program, Expression, BinaryExpression, NumericLiteral, Identifier
 from frontend.lexer import tokenise, Token, TokenType
 import sys
 
@@ -124,12 +124,6 @@ class Parser:
             case TokenType.IDENTIFIER:
                 identifier = Identifier(self.advance().value)
                 return identifier
-            
-            case TokenType.NULL:
-                # Advance pass null
-                self.advance()
-                null = NullLiteral()
-                return null
             
             case TokenType.NUMBER:
                 number = NumericLiteral(self.advance().value)
